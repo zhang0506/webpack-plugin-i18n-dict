@@ -1,0 +1,48 @@
+{
+  "name": "@sanliang/dictionary-plugin",
+  "version": "1.0.2",
+  "description": "dictionary-plugin",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "files": [
+    "build",
+    "README.md",
+    "CHANGELOG.md",
+    "docs"
+  ],
+  "scripts": {
+    "build": "npm run build:js",
+    "lint": "eslint modules",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zhang0506/webpack-plugin-i18n-dict.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@types/lodash": "^4.14.154",
+    "jest": "^26.0.1",
+    "rollup": "^1.21.4",
+    "ts-jest": "^26.1.0",
+    "typescript": "^3.9.3"
+  },
+  "peerDependencies": {
+    "vue": ">=2.5.10"
+  },
+  "browserify": {
+    "transform": [
+      "loose-envify"
+    ]
+  },
+  "browserslist": [
+    "> 0.5%",
+    "ie >= 9",
+    "safari >= 9",
+    "firefox >= 43",
+    "iOS >= 8"
+  ],
+  "author": "zhang",
+  "license": "MIT",
+  "gitHead": "86c404a62ec0557f07edf7e1285eb43a8b1f7e33"
+}

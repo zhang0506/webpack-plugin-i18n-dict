@@ -1,0 +1,17 @@
+{
+  "version": "1.0.2",
+  "packages": [
+    "packages/*"
+  ],
+  "command": {
+    "version": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish %s"
+    }
+  },
+  "ignoreChanges": [
+    "test/**",
+    "package-lock.json",
+    ".size-snapshot.json"
+  ]
+}
