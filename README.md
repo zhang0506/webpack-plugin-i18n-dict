@@ -1,0 +1,1 @@
+# webpack-plugin-i18n-dict
