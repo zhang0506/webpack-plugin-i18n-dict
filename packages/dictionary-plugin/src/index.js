@@ -33,7 +33,8 @@ function createFile(arr) {
       if (err) {
         console.error(err)
       } else {
-        writeF(`${data}<splitMark>${arr}`)
+        const a = JSON.parse(data)
+        writeF(a.concat(arr))
       }
     })
   } else {
@@ -45,7 +46,7 @@ function createFile(arr) {
  * @param data 需要写入的内容
  */
 function writeF(data) {
-  const jsonData = [...new Set(data.split('<splitMark>'))].join('<splitMark>')
+  const jsonData = JSON.stringify(data)
   // 写入文件
   fs.writeFile(file, jsonData, (err) => {
     if (err) {
@@ -80,7 +81,7 @@ function fileDisplay(filePath) {
               const dictKey = fs
                 .readFileSync(filedir, 'utf8')
                 .match(/(?<=\$t\(("|'))(.*?)(?=("|')\))/g)
-              if (dictKey != null) createFile(dictKey.join('<splitMark>'))
+              if (dictKey != null) createFile(dictKey)
             }
             if (isDir) {
               fileDisplay(filedir) // 递归，如果是文件夹，就继续遍历该文件夹下面的文件
