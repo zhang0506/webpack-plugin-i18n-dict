@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 let file = ''
 let NODE_ENV = 'production'
+var arrDict = []
 
 class DictionaryPlugin {
   constructor(callBack) {
@@ -12,7 +13,7 @@ class DictionaryPlugin {
   apply(compiler) {
     compiler.plugin('done', stats => {
       // 在 done 事件中回调 doneCallback
-      const filePath = path.join(compiler.outputPath, 'js')
+      const filePath = compiler.outputPath
       file = path.join(compiler.outputPath, 'dictData.json')
       if (process.env.NODE_ENV === NODE_ENV) {
         fileDisplay(filePath)
@@ -23,23 +24,34 @@ class DictionaryPlugin {
     })
   }
 }
+
+function dedupe(arr) {
+  var arr1 = [] // 新建一个数组来存放arr中的值
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (arr1.indexOf(arr[i]) === -1) {
+      arr1.push(arr[i])
+    }
+  }
+  return arr1
+}
 /**
  * 读取原有文件方法
  * @param arr 需要写入的内容
  */
 function createFile(arr) {
-  if (fs.existsSync(file)) {
-    fs.readFile(file, 'utf8', (err, data) => {
-      if (err) {
-        console.error(err)
-      } else {
-        const a = JSON.parse(data)
-        writeF(a.concat(arr))
-      }
-    })
-  } else {
-    writeF(arr)
-  }
+  // if (fs.existsSync(file)) {
+  //   fs.readFile(file, 'utf8', (err, data) => {
+  //     if (err) {
+  //       console.error(err)
+  //     } else {
+  //       const a = JSON.parse(data)
+  //       writeF(dedupe(a.concat(arr)))
+  //     }
+  //   })
+  // } else {
+  //   writeF(arr)
+  // }
+  writeF(dedupe(arr))
 }
 /**
  * 文件写入方法
@@ -76,12 +88,20 @@ function fileDisplay(filePath) {
           } else {
             const isFile = stats.isFile() // 是文件
             const isDir = stats.isDirectory() // 是文件夹
-            if (isFile) {
+            if (isFile && filedir.indexOf('.js') != -1) {
               // console.log(filedir)
               const dictKey = fs
                 .readFileSync(filedir, 'utf8')
-                .match(/(?<=\$t\(("|'))(.*?)(?=("|')\))/g)
-              if (dictKey != null) createFile(dictKey)
+                .match(/(?<=(\.|\$)t\(("|'))(.*?)(?=("|')\))/g)
+              if (dictKey != null) {
+                dictKey.forEach(item => {
+                  if (item.indexOf('(') === -1 && item.indexOf(')') === -1) {
+                    console.log(item)
+                    arrDict.push(item)
+                  }
+                })
+                createFile(arrDict)
+              }
             }
             if (isDir) {
               fileDisplay(filedir) // 递归，如果是文件夹，就继续遍历该文件夹下面的文件
